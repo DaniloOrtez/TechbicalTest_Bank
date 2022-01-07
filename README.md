@@ -1,1 +1,1 @@
-# TechbicalTest_Bank
+# TechnicalTest_Bank
