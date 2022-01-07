@@ -14,14 +14,10 @@ public class WebDriverFactory {
 
     private static final Properties prop = new Properties();
     private static final InputStream in = CreateDriver.class.getResourceAsStream( "../test.properties");
-    private static String resourceFolder;
-
-    private static WebDriverFactory instance = null;
 
     public static WebDriver CreateNewWebDriver(String browser, String os) throws IOException {
         WebDriver driver;
         prop.load(in);
-        resourceFolder = prop.getProperty("resourceFolder");
 
         //******** If the driver selected is Firefox  ********//
         if ("FIREFOX".equalsIgnoreCase(browser)) {
