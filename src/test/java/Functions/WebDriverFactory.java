@@ -12,8 +12,8 @@ import java.util.Properties;
 
 public class WebDriverFactory {
 
-    private static Properties prop = new Properties();
-    private static InputStream in = CreateDriver.class.getResourceAsStream( "../test.properties");
+    private static final Properties prop = new Properties();
+    private static final InputStream in = CreateDriver.class.getResourceAsStream( "../test.properties");
     private static String resourceFolder;
 
     private static WebDriverFactory instance = null;
