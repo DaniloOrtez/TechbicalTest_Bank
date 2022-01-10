@@ -1,0 +1,27 @@
+{
+  "apiBaseURL": {
+    "GetFieldBy": "",
+    "ValueToFind": "https://pokeapi.co/api/v2/"
+  },
+
+  "txtSearch": {
+    "GetFieldBy": "name",
+    "ValueToFind": "q"
+  },
+
+  "Pikachu": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//a[@href='/pokemon/pikachu']"
+  },
+
+  "stats": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//table[@class='stats']"
+  },
+
+  "abilities": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//dd[@class='imgentry']//a"
+  }
+
+}
