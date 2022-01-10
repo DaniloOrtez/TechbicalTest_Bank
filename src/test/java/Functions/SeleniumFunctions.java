@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileNotFoundException;
@@ -216,6 +217,63 @@ public class SeleniumFunctions {
 
     }
     //******************************************************************************************************************
+
+    // Scroll Java Script to element
+    public void scrollToElement(String element) throws Exception {
+        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("arguments[0].scrollIntoView();", driver.findElement(SeleniumElement));
+    }
+    //******************************************************************************************************************
+
+    // Select option from DropDown
+    public Select selectOption(String element) throws Exception{
+        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
+        return new Select(driver.findElement(SeleniumElement));
+    }
+    //******************************************************************************************************************
+
+
+    // Function to retrieve the WEB Calculate result and compare it with the result from the function  'mortgageCalculate'
+    public void TakeDataElement(String element_1, String element_2) throws Exception {
+
+        String homePrice = getEntityValue("Home Price Value");
+        float hPrice = Float.parseFloat(homePrice);
+
+        String dPayment = getEntityValue("Down Payment Value");
+        float downPayment = Float.parseFloat(dPayment)/100;
+        float Mortgage = hPrice - (hPrice * downPayment);
+
+        String ratePercent = getEntityValue("Interest Rate Value");
+        float rPercent = (Float.parseFloat(ratePercent)/100)/12;
+
+        String year = getEntityValue("Loan Term Value").replace(" Years", "");
+        int Months = Integer.parseInt(year)*12;
+
+        Double resultFunction = mortgageCalculate(Mortgage, rPercent, Months);
+
+        ClickJSElement(element_1);
+        String resultWEB = GetTextElement(element_2);
+
+        String webCalculated = (resultWEB.replace("$", ""));
+        String functionCalculated = (String.valueOf(Math.round(resultFunction * 100d) / 100d));
+
+        Assert.assertEquals("The results aren't equals", functionCalculated, webCalculated);
+
+        System.out.println("The WEB result is: " + webCalculated);
+        System.out.println("The Function result is: " + functionCalculated);
+
+    }
+    //******************************************************************************************************************
+
+
+    // Functions to calculate the mortgage with the Json file data sending from the TakenDataElement function
+    public static Double mortgageCalculate(float cMortgage,float rPercent, int years){
+
+        double resultFunction;
+        resultFunction = cMortgage * (rPercent * (Math.pow((1 + rPercent), years)) / (Math.pow((1 + rPercent), years)-1));
+        return resultFunction;
+    }
 
 
 

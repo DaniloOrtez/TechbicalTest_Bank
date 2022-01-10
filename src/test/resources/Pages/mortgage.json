@@ -1,0 +1,61 @@
+{
+  "Home price": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//input[@id='purchasePrice']"
+  },
+
+  "Percent": {
+    "GetFieldBy": "id",
+    "ValueToFind": "buttonPercent"
+  },
+
+  "Down Payment": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//input[@id='downPaymentPercent']"
+  },
+
+  "Loan Term": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//select[@id='term']"
+  },
+
+  "Interest rate": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//input[@id='rate']"
+  },
+
+  "Taxes": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//label[@id='includeTaxesNLabel']"
+  },
+
+  "Calculate": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//button[@id='calculateButton']"
+  },
+
+  "Total Payment": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//p[@data-qa='monthlyPayment']"
+  },
+
+  "Home Price Value": {
+    "GetFieldBy": "",
+    "ValueToFind": "260000"
+  },
+
+  "Down Payment Value": {
+    "GetFieldBy": "",
+    "ValueToFind": "30"
+  },
+
+  "Loan Term Value": {
+    "GetFieldBy": "",
+    "ValueToFind": "25 Years"
+  },
+
+  "Interest Rate Value": {
+    "GetFieldBy": "",
+    "ValueToFind": "4"
+  }
+}
