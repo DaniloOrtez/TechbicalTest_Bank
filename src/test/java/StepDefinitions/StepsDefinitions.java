@@ -44,7 +44,6 @@ public class StepsDefinitions {
     @And("^I select (.*)")
     public void iSelectMenu(String element) throws Exception {
         functions.ClickJSElement(element);
-        //Thread.sleep(6000);
     }
 
 

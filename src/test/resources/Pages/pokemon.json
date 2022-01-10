@@ -22,6 +22,41 @@
   "abilities": {
     "GetFieldBy": "xpath",
     "ValueToFind": "//dd[@class='imgentry']//a"
-  }
+  },
 
+  "Thunder Wave": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//b[contains(text(),'Thunder Wave')]"
+  },
+
+  "effect_entries": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//span[@class='col movedesccol']"
+  },
+
+
+  "PP": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//body[1]/div[3]/div[1]/dl[3]/dd[1]"
+  },
+
+  "optPokemon": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//button[@class='button']"
+  },
+
+  "Protean": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//b[contains(text(),'Protean')]"
+  },
+
+  "Protean": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//b[contains(text(),'Protean')]"
+  },
+
+  "pokemon": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//span[contains(text(),"
+  }
 }

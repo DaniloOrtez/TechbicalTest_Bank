@@ -9,11 +9,14 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -41,6 +44,9 @@ public class SeleniumFunctions {
     // Entities of DOM pages - Json
     public static String GetFieldBy = "";
     public static String ValueToFind = "";
+
+    // Explicits wait
+    public static int EXPLICIT_TIMEOUT = 15;
 
 
     //******************************************************************************************************************
@@ -131,6 +137,16 @@ public class SeleniumFunctions {
     }
     //******************************************************************************************************************
 
+    // Catch y return the text from a web object in the DOM
+    public String GetTextElement(String element) throws Exception {
+        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_TIMEOUT, 1));
+        wait.until(ExpectedConditions.presenceOfElementLocated(SeleniumElement));
+        ElementText = driver.findElement(SeleniumElement).getText();
+        return ElementText;
+    }
+    //******************************************************************************************************************
+
 
     // Read the DOM information and return the API data to compare results
     public void getPokemonData(String valueToFind, String element, String URL) throws Exception {
@@ -166,6 +182,29 @@ public class SeleniumFunctions {
                     objectWebList.add(foundValue);
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+            }
+            case "effect_entries" -> {
+                String ppText = "PP";
+                foundValue = GetTextElement(element);
+                String[] entireEffect = foundValue.split(" T");
+                String effectWEB = entireEffect[0];
+                objectWebList.add(effectWEB);
+                apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+                if (apiPokemonDataResponse != null) {
+                    foundValue = GetTextElement(ppText);
+                    String[] splitPP = foundValue.split("\n");
+                    String usePP = splitPP[0];
+                    objectWebList.add(usePP);
+                }
+            }
+            case "pokemon" -> {
+                apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+                for (String name : apiPokemonDataResponse) {
+                    String pokemonName = name.toUpperCase().charAt(0) + name.substring(1).toLowerCase();
+                    CompleteXpathElement = baseXpath + "'" + pokemonName + "')]";
+                    foundValue = getObjectText(CompleteXpathElement).toLowerCase();
+                    objectWebList.add(foundValue);
+                }
             }
 
             default -> System.out.println("The options doesn't exist");

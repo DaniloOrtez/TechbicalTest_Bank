@@ -44,6 +44,26 @@ public class apiFunctions {
                 JSONArray abilitiesArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
                 apiData = listApiData(abilitiesArray, valueInside, takenValue);
             }
+            case "effect_entries" ->{
+                takenValue = "effect";
+                endPoint = "move";
+                JSONArray effectArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
+                String value = featureEffect(effectArray, takenValue);
+                apiData.add(value);
+
+                if(apiData != null){
+                    String pp = getApiStringValue(baseURL, endPoint, valueToFind, "pp");
+                    System.out.println(pp);
+                    apiData.add(pp);
+                }
+            }
+            case "pokemon" -> {
+                valueInside = "pokemon";
+                takenValue = "name";
+                endPoint = "ability";
+                JSONArray pokemonArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
+                apiData = listApiData(pokemonArray, valueInside, takenValue);
+            }
 
             default -> System.out.println("Then options doesn't exist in the api response");
         }
@@ -76,6 +96,28 @@ public class apiFunctions {
         return effectA;
     }
     //******************************************************************************************************************
+
+    //Extract the features effects from the API
+    public static String featureEffect(JSONArray array, String toTake){
+        String returnValue = null;
+        for (int i = 0; i < array.size(); i++) {
+            dataObjects = (JSONObject) array.get(i);
+            returnValue = (String) dataObjects.get(toTake);
+        }
+        return returnValue;
+    }
+    //******************************************************************************************************************
+
+    //Return a String PP value from the API
+    public static String getApiStringValue(String baseURL, String endPoint, String valueToFind, String element) throws ParseException {
+        response = RestAssured.get(baseURL+ endPoint+ "/" + valueToFind); // request the server building the complete URL
+        responseBody = response.getBody().asString(); // store the response body in string
+        JSONObject apiObjects = (JSONObject) parse.parse(responseBody); // Convert response body in a Json Object
+        String PP = apiObjects.get(element).toString();
+        return PP;
+    }
+
+
 
 
 
