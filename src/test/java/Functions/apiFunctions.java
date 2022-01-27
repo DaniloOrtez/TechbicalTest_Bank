@@ -14,7 +14,6 @@ public class apiFunctions {
 
     public static String valueInside;
     public static String valorName;
-    public static String statValue;
     public static String endPoint;
     public static JSONObject dataObjects;
     public static JSONObject object;
