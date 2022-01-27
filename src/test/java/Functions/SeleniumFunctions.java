@@ -9,15 +9,11 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -46,16 +42,12 @@ public class SeleniumFunctions {
     public static String GetFieldBy = "";
     public static String ValueToFind = "";
 
-    // Explicits wait
-    public static int EXPLICIT_TIMEOUT = 15;
-
 
     //******************************************************************************************************************
     //******************************************* WEB FUNCTIONS ********************************************************
     //******************************************************************************************************************
 
     // Read Json file
-    @org.jetbrains.annotations.Nullable
     public static Object readJson() throws FileNotFoundException {
         FileReader reader = new FileReader(PageFilePath + FileName);
         try{
@@ -116,10 +108,13 @@ public class SeleniumFunctions {
     //******************************************************************************************************************
 
     // Click Function in a specific element in the DOM
-    public void ClickJSElement(String element) throws Exception {
-        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].click()", driver.findElement(SeleniumElement));
+    public void ClickJSElement(String element, String pokemonName) throws Exception {
+        String baseElement = SeleniumFunctions.getEntityValue(element);
+        String SeleniumElement = baseElement + pokemonName + "']";
+        System.out.println(SeleniumElement);
+        driver.findElement(By.xpath(SeleniumElement)).click();
+        //JavascriptExecutor jse = (JavascriptExecutor)driver;
+        //jse.executeScript("arguments[0].click()", driver.findElement(By.xpath(SeleniumElement + pokemonName + "']")));
     }
     //******************************************************************************************************************
 
@@ -138,20 +133,13 @@ public class SeleniumFunctions {
     }
     //******************************************************************************************************************
 
-    // Catch y return the text from a web object in the DOM
-    public String GetTextElement(String element) throws Exception {
-        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_TIMEOUT, 1));
-        wait.until(ExpectedConditions.presenceOfElementLocated(SeleniumElement));
-        ElementText = driver.findElement(SeleniumElement).getText();
-        return ElementText;
-    }
-    //******************************************************************************************************************
-
 
     // Read the DOM information and return the API data to compare results
     public void getPokemonData(String valueToFind, String element, String URL) throws Exception {
         String foundValue;
+        String valor;
+        String valorXpath;
+        String valueToAdd;
         int rowCount;
         String CompleteXpathElement;
         List<String> objectWebList = new ArrayList<>();
@@ -165,13 +153,17 @@ public class SeleniumFunctions {
                 for (int i = 2; i < rowCount; i++) {
                     CompleteXpathElement = baseXpath + "//tr[" + i + "]//th";
                     foundValue = getObjectText(CompleteXpathElement).replace(":", "");
-
                     if (foundValue.equals("Sp. Atk")) {
                         foundValue = "special attack";
                     } else if (foundValue.equals("Sp. Def")) {
                         foundValue = "special defense";
                     }
-                    objectWebList.add(foundValue.toLowerCase());
+
+                    valorXpath = baseXpath + "//tr[" + i + "]//td[" + 1 + "]";
+                    valor = getObjectText(valorXpath);
+                    valueToAdd = foundValue + ": " + valor;
+                    objectWebList.add(valueToAdd.toLowerCase());
+
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
             }
@@ -184,25 +176,11 @@ public class SeleniumFunctions {
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
             }
-            case "effect_entries" -> {
-                String ppText = "PP";
-                foundValue = GetTextElement(element);
-                String[] entireEffect = foundValue.split(" T");
-                String effectWEB = entireEffect[0];
-                objectWebList.add(effectWEB);
+            case "types" -> {
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
-                if (apiPokemonDataResponse != null) {
-                    foundValue = GetTextElement(ppText);
-                    String[] splitPP = foundValue.split("\n");
-                    String usePP = splitPP[0];
-                    objectWebList.add(usePP);
-                }
-            }
-            case "pokemon" -> {
-                apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
-                for (String name : apiPokemonDataResponse) {
-                    String pokemonName = name.toUpperCase().charAt(0) + name.substring(1).toLowerCase();
-                    CompleteXpathElement = baseXpath + "'" + pokemonName + "')]";
+
+                for (String type : apiPokemonDataResponse){
+                    CompleteXpathElement = baseXpath + type + "']";
                     foundValue = getObjectText(CompleteXpathElement).toLowerCase();
                     objectWebList.add(foundValue);
                 }
@@ -217,63 +195,6 @@ public class SeleniumFunctions {
 
     }
     //******************************************************************************************************************
-
-    // Scroll Java Script to element
-    public void scrollToElement(String element) throws Exception {
-        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].scrollIntoView();", driver.findElement(SeleniumElement));
-    }
-    //******************************************************************************************************************
-
-    // Select option from DropDown
-    public Select selectOption(String element) throws Exception{
-        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
-        return new Select(driver.findElement(SeleniumElement));
-    }
-    //******************************************************************************************************************
-
-
-    // Function to retrieve the WEB Calculate result and compare it with the result from the function  'mortgageCalculate'
-    public void TakeDataElement(String element_1, String element_2) throws Exception {
-
-        String homePrice = getEntityValue("Home Price Value");
-        float hPrice = Float.parseFloat(homePrice);
-
-        String dPayment = getEntityValue("Down Payment Value");
-        float downPayment = Float.parseFloat(dPayment)/100;
-        float Mortgage = hPrice - (hPrice * downPayment);
-
-        String ratePercent = getEntityValue("Interest Rate Value");
-        float rPercent = (Float.parseFloat(ratePercent)/100)/12;
-
-        String year = getEntityValue("Loan Term Value").replace(" Years", "");
-        int Months = Integer.parseInt(year)*12;
-
-        Double resultFunction = mortgageCalculate(Mortgage, rPercent, Months);
-
-        ClickJSElement(element_1);
-        String resultWEB = GetTextElement(element_2);
-
-        String webCalculated = (resultWEB.replace("$", ""));
-        String functionCalculated = (String.valueOf(Math.round(resultFunction * 100d) / 100d));
-
-        Assert.assertEquals("The results aren't equals", functionCalculated, webCalculated);
-
-        System.out.println("The WEB result is: " + webCalculated);
-        System.out.println("The Function result is: " + functionCalculated);
-
-    }
-    //******************************************************************************************************************
-
-
-    // Functions to calculate the mortgage with the Json file data sending from the TakenDataElement function
-    public static Double mortgageCalculate(float cMortgage,float rPercent, int years){
-
-        double resultFunction;
-        resultFunction = cMortgage * (rPercent * (Math.pow((1 + rPercent), years)) / (Math.pow((1 + rPercent), years)-1));
-        return resultFunction;
-    }
 
 
 

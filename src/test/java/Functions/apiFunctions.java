@@ -13,7 +13,7 @@ import java.util.List;
 public class apiFunctions {
 
     public static String valueInside;
-    public static String takenValue;
+    public static String valorName;
     public static String endPoint;
     public static JSONObject dataObjects;
     public static JSONObject object;
@@ -32,17 +32,24 @@ public class apiFunctions {
         switch (element) {
             case "stats" -> {
                 valueInside = "stat";
-                takenValue = "name";
+                valorName = "name";
                 endPoint = "pokemon";
                 JSONArray statsArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
-                apiData = listApiData(statsArray, valueInside, takenValue);
+                apiData = listApiData(statsArray, valueInside, valorName);
             }
             case "abilities" -> {
                 valueInside = "ability";
-                takenValue = "name";
+                valorName = "name";
                 endPoint = "pokemon";
                 JSONArray abilitiesArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
-                apiData = listApiData(abilitiesArray, valueInside, takenValue);
+                apiData = listApiData(abilitiesArray, valueInside, valorName);
+            }
+            case "types" -> {
+                valueInside = "type";
+                valorName = "name";
+                endPoint = "pokemon";
+                JSONArray abilitiesArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
+                apiData = listApiData(abilitiesArray, valueInside, valorName);
             }
             case "effect_entries" ->{
                 takenValue = "effect";
@@ -75,11 +82,22 @@ public class apiFunctions {
     //Return a data list with the values from the API given a specific value to find replacing some characters
     public static List<String> listApiData(JSONArray jsonArray, String vInside, String take){
         array.clear();
+        String statName;
+        Object statValue;
+        String value;
         for (int i = 0; i < jsonArray.size(); i++) {
             dataObjects = (JSONObject) jsonArray.get(i);
-            array.add(dataObjects.get(vInside));
-            object = (JSONObject) array.get(i);
-            String value = (String) object.get(take);
+            if (vInside.equals("stat")){
+                array.add(dataObjects.get(vInside));
+                object = (JSONObject) array.get(i);
+                statName = (String) object.get(take);
+                statValue = dataObjects.get("base_stat");
+                value = statName.replace("-", " ") + ": " + statValue;
+            } else {
+                array.add(dataObjects.get(vInside));
+                object = (JSONObject) array.get(i);
+                value = (String) object.get(take);
+            }
             apiDataList.add(value.toLowerCase().replace("-", " "));
         }
         return apiDataList;

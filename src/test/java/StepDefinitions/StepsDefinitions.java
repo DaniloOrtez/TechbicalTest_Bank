@@ -6,7 +6,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class StepsDefinitions {
     }
 
 
-    @And("^I set the (.*) with the value (.*)$")
+    @And("^I (.*) the pokemon (.*)$")
     public void sendText(String element, String text) throws Exception {
         By SeleniumElement = functions.getCompleteElement(element);
         driver.findElement(SeleniumElement).clear();
@@ -42,9 +41,10 @@ public class StepsDefinitions {
     }
 
 
-    @And("^I select (.*)")
-    public void iSelectMenu(String element) throws Exception {
-        functions.ClickJSElement(element);
+    @And("^I select the (.*): (.*)$")
+    public void iSelectMenu(String element, String pokemonName) throws Exception {
+        functions.ClickJSElement(element, pokemonName);
+        //Thread.sleep(6000);
     }
 
 
@@ -53,35 +53,6 @@ public class StepsDefinitions {
         functions.getPokemonData(value, element, URL);
     }
 
-
-    //Mortgage steps ******************************************************************************************
-
-    @And("^The (.*) is completed with the (.*)$")
-    public void sendJsonTextValue(String element, String JsonText) throws Exception {
-        By SeleniumElement = functions.getCompleteElement(element);
-        driver.findElement(SeleniumElement).clear();
-
-        String Text = functions.getEntityValue(JsonText);
-        driver.findElement(SeleniumElement).sendKeys(Text);
-        //Thread.sleep(3000);
-    }
-
-    @And("^I do scroll to (.*)$")
-    public void iDoScrollTo(String element) throws Exception {
-        functions.scrollToElement(element);
-    }
-
-    @And("^I set the (.*) dropdrown with the (.*)$")
-    public void iSetDropdrown(String element, String JsonValue) throws Exception {
-        Select opt = functions.selectOption(element);
-        String value = functions.getEntityValue(JsonValue);
-        opt.selectByVisibleText(value);
-    }
-
-    @And("^I (.*) the (.*) result$")
-    public void iTheTotalResult(String element_1, String element_2) throws Exception {
-        functions.TakeDataElement(element_1, element_2);
-    }
 
 
 
