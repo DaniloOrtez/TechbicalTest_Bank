@@ -33,7 +33,7 @@ public class StepsDefinitions {
     }
 
 
-    @And("^I set the (.*) with the value (.*)$")
+    @And("^I (.*) the pokemon (.*)$")
     public void sendText(String element, String text) throws Exception {
         By SeleniumElement = functions.getCompleteElement(element);
         driver.findElement(SeleniumElement).clear();
@@ -41,9 +41,9 @@ public class StepsDefinitions {
     }
 
 
-    @And("^I select (.*)")
-    public void iSelectMenu(String element) throws Exception {
-        functions.ClickJSElement(element);
+    @And("^I select the (.*): (.*)$")
+    public void iSelectMenu(String element, String pokemonName) throws Exception {
+        functions.ClickJSElement(element, pokemonName);
         //Thread.sleep(6000);
     }
 

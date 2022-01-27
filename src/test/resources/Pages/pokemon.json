@@ -4,14 +4,14 @@
     "ValueToFind": "https://pokeapi.co/api/v2/"
   },
 
-  "txtSearch": {
+  "Search": {
     "GetFieldBy": "name",
     "ValueToFind": "q"
   },
 
-  "Pikachu": {
+  "Pokemon": {
     "GetFieldBy": "xpath",
-    "ValueToFind": "//a[@href='/pokemon/pikachu']"
+    "ValueToFind": "//a[@href='/pokemon/"
   },
 
   "stats": {
@@ -22,6 +22,11 @@
   "abilities": {
     "GetFieldBy": "xpath",
     "ValueToFind": "//dd[@class='imgentry']//a"
+  },
+
+  "types": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//a[@href='/types/"
   }
 
 }

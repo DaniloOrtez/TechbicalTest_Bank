@@ -48,7 +48,6 @@ public class SeleniumFunctions {
     //******************************************************************************************************************
 
     // Read Json file
-    @org.jetbrains.annotations.Nullable
     public static Object readJson() throws FileNotFoundException {
         FileReader reader = new FileReader(PageFilePath + FileName);
         try{
@@ -109,10 +108,13 @@ public class SeleniumFunctions {
     //******************************************************************************************************************
 
     // Click Function in a specific element in the DOM
-    public void ClickJSElement(String element) throws Exception {
-        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].click()", driver.findElement(SeleniumElement));
+    public void ClickJSElement(String element, String pokemonName) throws Exception {
+        String baseElement = SeleniumFunctions.getEntityValue(element);
+        String SeleniumElement = baseElement + pokemonName + "']";
+        System.out.println(SeleniumElement);
+        driver.findElement(By.xpath(SeleniumElement)).click();
+        //JavascriptExecutor jse = (JavascriptExecutor)driver;
+        //jse.executeScript("arguments[0].click()", driver.findElement(By.xpath(SeleniumElement + pokemonName + "']")));
     }
     //******************************************************************************************************************
 
@@ -135,6 +137,9 @@ public class SeleniumFunctions {
     // Read the DOM information and return the API data to compare results
     public void getPokemonData(String valueToFind, String element, String URL) throws Exception {
         String foundValue;
+        String valor;
+        String valorXpath;
+        String valueToAdd;
         int rowCount;
         String CompleteXpathElement;
         List<String> objectWebList = new ArrayList<>();
@@ -148,13 +153,17 @@ public class SeleniumFunctions {
                 for (int i = 2; i < rowCount; i++) {
                     CompleteXpathElement = baseXpath + "//tr[" + i + "]//th";
                     foundValue = getObjectText(CompleteXpathElement).replace(":", "");
-
                     if (foundValue.equals("Sp. Atk")) {
                         foundValue = "special attack";
                     } else if (foundValue.equals("Sp. Def")) {
                         foundValue = "special defense";
                     }
-                    objectWebList.add(foundValue.toLowerCase());
+
+                    valorXpath = baseXpath + "//tr[" + i + "]//td[" + 1 + "]";
+                    valor = getObjectText(valorXpath);
+                    valueToAdd = foundValue + ": " + valor;
+                    objectWebList.add(valueToAdd.toLowerCase());
+
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
             }
@@ -166,6 +175,15 @@ public class SeleniumFunctions {
                     objectWebList.add(foundValue);
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+            }
+            case "types" -> {
+                apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+
+                for (String type : apiPokemonDataResponse){
+                    CompleteXpathElement = baseXpath + type + "']";
+                    foundValue = getObjectText(CompleteXpathElement).toLowerCase();
+                    objectWebList.add(foundValue);
+                }
             }
 
             default -> System.out.println("The options doesn't exist");
