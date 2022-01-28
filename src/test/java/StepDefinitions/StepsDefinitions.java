@@ -15,7 +15,7 @@ public class StepsDefinitions {
     WebDriver driver;
     SeleniumFunctions functions = new SeleniumFunctions();
 
-    public StepsDefinitions() throws Exception {
+    public StepsDefinitions() {
         driver = Hooks.driver;
     }
 
