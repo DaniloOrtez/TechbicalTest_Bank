@@ -60,10 +60,7 @@ public class StepsDefinitions {
 
     //Mortgage steps ******************************************************************************************
 
-    @And("^I select (.*)")
-    public void iSelectMenu(String element) throws Exception {
-        functions.ClickJSElement(element);
-    }
+
 
     @And("^The (.*) is completed with the (.*)$")
     public void sendJsonTextValue(String element, String JsonText) throws Exception {
@@ -93,5 +90,8 @@ public class StepsDefinitions {
     }
 
 
-
+    @And("^I select (.*) value$")
+    public void iSelectValue(String element) throws Exception {
+        functions.ClickJSElement(element);
+    }
 }
