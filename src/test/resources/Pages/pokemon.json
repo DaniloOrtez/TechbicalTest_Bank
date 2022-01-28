@@ -27,6 +27,36 @@
   "types": {
     "GetFieldBy": "xpath",
     "ValueToFind": "//a[@href='/types/"
-  }
+  },
 
+  "***************************************************************************************": {
+    "USER HISTORY": "2",
+    "VALUES TO FIND": "Attack and specific ability"
+  },
+
+  "attack": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//a[@data-entry='move|"
+  },
+
+  "effect_entries": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//span[@class='col movedesccol']"
+  },
+
+
+  "PP": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//dd[contains(text(),'"
+  },
+
+  "Tab": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//button[@class='button']"
+  },
+
+  "ability": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//span[contains(text(),"
+  }
 }

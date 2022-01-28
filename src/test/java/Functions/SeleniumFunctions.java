@@ -9,11 +9,14 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -42,6 +45,8 @@ public class SeleniumFunctions {
     public static String GetFieldBy = "";
     public static String ValueToFind = "";
 
+    // Explicits wait
+    public static int EXPLICIT_TIMEOUT = 15;
 
     //******************************************************************************************************************
     //******************************************* WEB FUNCTIONS ********************************************************
@@ -108,13 +113,10 @@ public class SeleniumFunctions {
     //******************************************************************************************************************
 
     // Click Function in a specific element in the DOM
-    public void ClickJSElement(String element, String pokemonName) throws Exception {
+    public void ClickOnElment(String element, String name) throws Exception {
         String baseElement = SeleniumFunctions.getEntityValue(element);
-        String SeleniumElement = baseElement + pokemonName + "']";
-        System.out.println(SeleniumElement);
+        String SeleniumElement = baseElement + name + "']";
         driver.findElement(By.xpath(SeleniumElement)).click();
-        //JavascriptExecutor jse = (JavascriptExecutor)driver;
-        //jse.executeScript("arguments[0].click()", driver.findElement(By.xpath(SeleniumElement + pokemonName + "']")));
     }
     //******************************************************************************************************************
 
@@ -133,6 +135,23 @@ public class SeleniumFunctions {
     }
     //******************************************************************************************************************
 
+    // Catch y return the text from a web object in the DOM
+    public String GetTextElement(String element) throws Exception {
+        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_TIMEOUT, 1));
+        wait.until(ExpectedConditions.presenceOfElementLocated(SeleniumElement));
+        ElementText = driver.findElement(SeleniumElement).getText();
+        return ElementText;
+    }
+    //******************************************************************************************************************
+
+    // Click Function in a specific element in the DOM
+    public void ClickJSElement(String element) throws Exception {
+        By SeleniumElement = SeleniumFunctions.getCompleteElement(element);
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("arguments[0].click()", driver.findElement(SeleniumElement));
+    }
+    //******************************************************************************************************************
 
     // Read the DOM information and return the API data to compare results
     public void getPokemonData(String valueToFind, String element, String URL) throws Exception {
@@ -152,20 +171,21 @@ public class SeleniumFunctions {
                 rowCount = driver.findElements(By.xpath(baseXpath + "//tr")).size();
                 for (int i = 2; i < rowCount; i++) {
                     CompleteXpathElement = baseXpath + "//tr[" + i + "]//th";
-                    foundValue = getObjectText(CompleteXpathElement).replace(":", "");
-                    if (foundValue.equals("Sp. Atk")) {
-                        foundValue = "special attack";
-                    } else if (foundValue.equals("Sp. Def")) {
-                        foundValue = "special defense";
+                    foundValue = getObjectText(CompleteXpathElement);
+                    if (foundValue.equals("Sp. Atk:")) {
+                        foundValue = "special attack:";
+                    } else if (foundValue.equals("Sp. Def:")) {
+                        foundValue = "special defense:";
                     }
 
                     valorXpath = baseXpath + "//tr[" + i + "]//td[" + 1 + "]";
                     valor = getObjectText(valorXpath);
-                    valueToAdd = foundValue + ": " + valor;
+                    valueToAdd = foundValue + " " + valor;
                     objectWebList.add(valueToAdd.toLowerCase());
 
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+                Assert.assertEquals("The data is no equal ", objectWebList, apiPokemonDataResponse);
             }
             case "abilities" -> {
                 rowCount = driver.findElements(By.xpath(baseXpath)).size();
@@ -175,6 +195,7 @@ public class SeleniumFunctions {
                     objectWebList.add(foundValue);
                 }
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+                Assert.assertEquals("The data is no equal ", objectWebList, apiPokemonDataResponse);
             }
             case "types" -> {
                 apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
@@ -184,12 +205,53 @@ public class SeleniumFunctions {
                     foundValue = getObjectText(CompleteXpathElement).toLowerCase();
                     objectWebList.add(foundValue);
                 }
+                Assert.assertEquals("The data is no equal ", apiPokemonDataResponse, objectWebList);
+            }
+            case "effect_entries" -> {
+                String effectToFind;
+                String ppText = "PP";
+                String ppAPI;
+                String ppXpath;
+                String ppValue;
+                foundValue = GetTextElement(element);
+
+                effectToFind = valueToFind.toLowerCase().replace(" ", "-");
+                apiPokemonDataResponse = apiFunctions.readAllDetails(effectToFind, element, apiBaseURL);
+
+                String[] entireEffect = foundValue.split(" T");
+                String effectWEB = entireEffect[0];
+                objectWebList.add(effectWEB);
+
+                if (apiPokemonDataResponse != null) {
+                    ppAPI = apiPokemonDataResponse.get(1);
+                    foundValue = SeleniumFunctions.getEntityValue(ppText);
+                    ppXpath = foundValue + ppAPI + "')]";
+                    ppValue = getObjectText(ppXpath);
+                    String[] splitPP = ppValue.split("\n");
+                    String usePP = splitPP[0];
+                    objectWebList.add(usePP);
+                }
+                Assert.assertEquals("The data is no equal ", objectWebList, apiPokemonDataResponse);
+            }
+            case "ability" -> {
+                String[] splitName;
+                apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
+                for (String name : apiPokemonDataResponse) {
+                    String pokemonName = name.toUpperCase().charAt(0) + name.substring(1).toLowerCase();
+                    splitName = pokemonName.split("-");
+                    String firstSplit = splitName[0];
+                    splitName = firstSplit.split(" ");
+                    String useName = splitName[0];
+                    CompleteXpathElement = baseXpath + "'" + useName + "')]";
+                    foundValue = getObjectText(CompleteXpathElement).toLowerCase();
+                    objectWebList.add(foundValue.replace("-", " "));
+                }
+                Assert.assertEquals("The data is no equal ", apiPokemonDataResponse, objectWebList);
             }
 
             default -> System.out.println("The options doesn't exist");
         }
-        apiPokemonDataResponse = apiFunctions.readAllDetails(valueToFind, element, apiBaseURL);
-        Assert.assertEquals("The data is no equal ", objectWebList, apiPokemonDataResponse);
+
         System.out.println("The pokemon WEB stats are: " + objectWebList);
         System.out.println("The pokemon API stats are: " + apiPokemonDataResponse);
 

@@ -52,24 +52,23 @@ public class apiFunctions {
                 apiData = listApiData(abilitiesArray, valueInside, valorName);
             }
             case "effect_entries" ->{
-                takenValue = "effect";
+                valorName = "effect";
                 endPoint = "move";
                 JSONArray effectArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
-                String value = featureEffect(effectArray, takenValue);
+                String value = featureEffect(effectArray, valorName);
                 apiData.add(value);
 
                 if(apiData != null){
                     String pp = getApiStringValue(baseURL, endPoint, valueToFind, "pp");
-                    System.out.println(pp);
                     apiData.add(pp);
                 }
             }
-            case "pokemon" -> {
+            case "ability" -> {
                 valueInside = "pokemon";
-                takenValue = "name";
+                valorName = "name";
                 endPoint = "ability";
-                JSONArray pokemonArray = getApiJsonArray(baseURL, endPoint, valueToFind, element);
-                apiData = listApiData(pokemonArray, valueInside, takenValue);
+                JSONArray pokemonArray = getApiJsonArray(baseURL, endPoint, valueToFind, valueInside);
+                apiData = listApiData(pokemonArray, valueInside, valorName);
             }
 
             default -> System.out.println("Then options doesn't exist in the api response");
