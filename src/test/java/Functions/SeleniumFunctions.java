@@ -1,24 +1,22 @@
 package Functions;
 
 import StepDefinitions.Hooks;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -219,9 +217,9 @@ public class SeleniumFunctions {
                 effectToFind = valueToFind.toLowerCase().replace(" ", "-");
                 apiPokemonDataResponse = apiFunctions.readAllDetails(effectToFind, element, apiBaseURL);
 
-                String[] entireEffect = foundValue.split(" T");
-                String effectWEB = entireEffect[0];
-                objectWebList.add(effectWEB);
+                //String[] entireEffect = foundValue.split(" T");
+                //String effectWEB = entireEffect[0];
+                objectWebList.add(foundValue);
 
                 if (apiPokemonDataResponse != null) {
                     ppAPI = apiPokemonDataResponse.get(1);
@@ -318,6 +316,14 @@ public class SeleniumFunctions {
     }
 
 
+//******************************************************************************************************************
 
+    /** SCREENSHOT WITH SELENIUM **/
+    public void ScreenShot(String TestCaptura) throws IOException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+        String screenShotName = readProperties("ScreenShotPath") + "\\" + readProperties("browser") + "\\" + TestCaptura + "_(" + dateFormat.format(GregorianCalendar.getInstance().getTime()) + ")";
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(scrFile, new File(String.format("%s.png", screenShotName)));
+    }
 
 }

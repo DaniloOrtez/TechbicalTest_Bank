@@ -3,57 +3,62 @@ Feature: technicalTest_bank
 
 
     #Taken pokemon STATS data ********************************************************************************************
-    @testP
+    @test
     Scenario: Taken pokemon Stats data
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
     And I Search data of charizard
     And I select the Pokemon: charizard
     And I compare the charizard web stats whit the data from the apiBaseURL
+    And I take an ScreenShot of PokemonStatsTest
 
     #pikachu
     #bulbasaur
 
   #Taken pokemon ABILITIES data ****************************************************************************************
-    @testP
+    @test
     Scenario: Taken pokemon Abilities data
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
     And I Search data of bulbasaur
     And I select the Pokemon: bulbasaur
     And I compare the bulbasaur web abilities whit the data from the apiBaseURL
+    And I take an ScreenShot of PokemonAbilitiesTest
 
 
     #Taken pokemon TYPES data ****************************************************************************************
-    @testP
+    @test
     Scenario: Taken pokemon Types data
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
     And I Search data of bulbasaur
     And I select the Pokemon: bulbasaur
     And I compare the bulbasaur web types whit the data from the apiBaseURL
+    And I take an ScreenShot of PokemonTypesTest
 
 
     #Taken specific pokemon ABILITY *******************************************************************************************
-    @testP
+    @test
     Scenario: Searching pokemon attack
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
-    And I Search data of Thunder Wave
-    And I select the attack: Thunder Wave
-    And I compare the Thunder Wave web effect_entries whit the data from the apiBaseURL
+    And I Search data of Air Slash
+    And I select the attack: Air Slash
+    And I compare the Air Slash web effect_entries whit the data from the apiBaseURL
+    And I take an ScreenShot of PokemonAttackTest
 
     #Ember
     #Air Slash
 
   #Taken pokemon ATTACK (Move) *****************************************************************************************
-    @testP
+    @test
     Scenario: Searching ability
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
     And I do click in Tab Pokemon
     And I Search data of protean
     And I compare the protean web ability whit the data from the apiBaseURL
+    And I take an ScreenShot of Pokemon'sAbilityTest
 
     #pixilate
     #plus
@@ -74,3 +79,4 @@ Feature: technicalTest_bank
         And I select Taxes value
         And I select Calculate value
         And I Calculate the Total Payment result
+        And I take an ScreenShot of CalculateMortgageTest

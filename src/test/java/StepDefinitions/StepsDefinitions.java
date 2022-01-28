@@ -94,4 +94,15 @@ public class StepsDefinitions {
     public void iSelectValue(String element) throws Exception {
         functions.ClickJSElement(element);
     }
+
+
+
+    @And("^I take an ScreenShot of (.*)$")
+    public void iTakeAnScreenShotOf(String TestCature) throws IOException {
+        functions.ScreenShot(TestCature);
+    }
+
+
+
+
 }
