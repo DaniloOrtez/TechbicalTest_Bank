@@ -42,6 +42,7 @@ Feature: technicalTest_bank
     Scenario: Searching pokemon attack
     Given I go to the PokemonUrl site
     Then The pokemon.json DOM information is loaded
+    And I do click in Tab Moves
     And I Search data of Air Slash
     And I select the attack: Air Slash
     And I compare the Air Slash web effect_entries whit the data from the apiBaseURL

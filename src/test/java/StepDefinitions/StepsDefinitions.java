@@ -53,7 +53,7 @@ public class StepsDefinitions {
         functions.getPokemonData(value, element, URL);
     }
 
-    @And("^I do click in (.*) Pokemon")
+    @And("^I do click in (.*)")
     public void iDoClick(String element) throws Exception {
         functions.ClickJSElement(element);
     }

@@ -50,9 +50,14 @@
     "ValueToFind": "//dd[contains(text(),'"
   },
 
-  "Tab": {
+  "Tab Pokemon": {
     "GetFieldBy": "xpath",
-    "ValueToFind": "//button[@class='button']"
+    "ValueToFind": "//button[contains(text(),'Pokémon')]"
+  },
+
+  "Tab Moves": {
+    "GetFieldBy": "xpath",
+    "ValueToFind": "//button[contains(text(),'Moves')]"
   },
 
   "ability": {
